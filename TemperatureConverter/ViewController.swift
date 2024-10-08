@@ -19,11 +19,12 @@ class ViewController: UIViewController {
         return label
     }()
 
-    lazy var temperatureInputTextField: UITextField = {
-        let textField = UITextField()
+    lazy var temperatureInputTextField: CustomTextField = {
+        let textField = CustomTextField()
         textField.placeholder = "Enter temperature in °C"
         textField.backgroundColor = .white
         textField.keyboardType = .numberPad
+        textField.layer.cornerRadius = 5.0
         return textField
     }()
 
@@ -56,6 +57,7 @@ class ViewController: UIViewController {
         ])
         stackView.axis = .vertical
         stackView.spacing = 20.0
+        stackView.alignment = .center
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
@@ -77,7 +79,9 @@ class ViewController: UIViewController {
                 .constraint(equalTo: view.centerXAnchor),
             verticalStackView.centerYAnchor
                 .constraint(equalTo: view.centerYAnchor),
-            verticalStackView.widthAnchor.constraint(equalToConstant: 200.0)
+
+            temperatureInputTextField.widthAnchor.constraint(equalToConstant: 240.0),
+            convertButton.widthAnchor.constraint(equalToConstant: 150.0)
         ])
     }
 
@@ -108,5 +112,23 @@ class ViewController: UIViewController {
     func updateConversionsCounter() {
         numberOfConversions += 1
         conversionsCounterLabel.text = "\(numberOfConversions) conversions"
+    }
+}
+
+class CustomTextField: UITextField {
+
+    // Custom class created to add padding inside TextField
+    let insets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
+
+    override func textRect(forBounds bounds: CGRect) -> CGRect {
+        return bounds.inset(by: insets)
+    }
+
+    override func editingRect(forBounds bounds: CGRect) -> CGRect {
+        return bounds.inset(by: insets)
+    }
+
+    override func placeholderRect(forBounds bounds: CGRect) -> CGRect {
+        return bounds.inset(by: insets)
     }
 }
