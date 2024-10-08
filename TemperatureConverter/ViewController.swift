@@ -8,7 +8,17 @@
 import UIKit
 
 class ViewController: UIViewController {
-    
+
+    var numberOfConversions: Int = 0
+
+    lazy var conversionsCounterLabel: UILabel = {
+        let label = UILabel()
+        label.text = "0 conversions"
+        label.textColor = .white
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
     lazy var temperatureInputTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "Enter temperature in °C"
@@ -57,8 +67,12 @@ class ViewController: UIViewController {
 
     func setup() {
         view.backgroundColor = .systemTeal
+        view.addSubview(conversionsCounterLabel)
         view.addSubview(verticalStackView)
         NSLayoutConstraint.activate([
+            conversionsCounterLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10.0),
+            conversionsCounterLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10.0),
+
             verticalStackView.centerXAnchor
                 .constraint(equalTo: view.centerXAnchor),
             verticalStackView.centerYAnchor
@@ -76,6 +90,8 @@ class ViewController: UIViewController {
             let temperatureInCelsius = Double(temperatureInput) ?? 0.0
             let temperatureInFahrenheit = temperatureInCelsius * 9 / 5 + 32
             temperatureOutputLabel.text = "\(temperatureInFahrenheit) °F"
+
+            updateConversionsCounter()
         }
     }
 
@@ -87,5 +103,10 @@ class ViewController: UIViewController {
         )
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
+    }
+
+    func updateConversionsCounter() {
+        numberOfConversions += 1
+        conversionsCounterLabel.text = "\(numberOfConversions) conversions"
     }
 }
