@@ -16,7 +16,7 @@ class ViewController: UIViewController {
         textField.keyboardType = .numberPad
         return textField
     }()
-    
+
     lazy var convertButton: UIButton = {
         let button = UIButton()
         button.configuration = .filled()
@@ -28,7 +28,7 @@ class ViewController: UIViewController {
         )
         return button
     }()
-    
+
     lazy var temperatureOutputLabel: UILabel = {
         let label = UILabel()
         label.text = "~Result~"
@@ -37,7 +37,7 @@ class ViewController: UIViewController {
         label.textAlignment = .center
         return label
     }()
-    
+
     lazy var verticalStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
             temperatureInputTextField,
@@ -49,23 +49,43 @@ class ViewController: UIViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
     }
-    
+
     func setup() {
         view.backgroundColor = .systemTeal
         view.addSubview(verticalStackView)
         NSLayoutConstraint.activate([
-            verticalStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            verticalStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            verticalStackView.centerXAnchor
+                .constraint(equalTo: view.centerXAnchor),
+            verticalStackView.centerYAnchor
+                .constraint(equalTo: view.centerYAnchor),
             verticalStackView.widthAnchor.constraint(equalToConstant: 200.0)
         ])
     }
-    
+
     @objc func convertTemperatureFromCelsiusToFahrenheit() {
-        print("Converting...")
+        let temperatureInput = temperatureInputTextField.text ?? ""
+        if temperatureInput.isEmpty {
+            showAlert()
+            temperatureOutputLabel.text = "~Result~"
+        } else {
+            let temperatureInCelsius = Double(temperatureInput) ?? 0.0
+            let temperatureInFahrenheit = temperatureInCelsius * 9 / 5 + 32
+            temperatureOutputLabel.text = "\(temperatureInFahrenheit) °F"
+        }
+    }
+
+    func showAlert() {
+        let alert = UIAlertController(
+            title: "Error",
+            message: "Please enter a temperature.",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
     }
 }
